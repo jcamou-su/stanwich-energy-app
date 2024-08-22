@@ -64,8 +64,8 @@ if not st.session_state.submitted and not st.session_state.confirm_submit:
     st.session_state.price8 = st.number_input('Enter Price 8', min_value=0.0, format="%.6f")
 
     # Initial Submit button
-if st.button("Submit"):
-    st.session_state.confirm_submit = True
+    if st.button("Submit"):
+        st.session_state.confirm_submit = True
 
 
 
