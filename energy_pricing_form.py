@@ -16,8 +16,8 @@ def save_data(data):
             st.write("File exists. Appending data.")
             # Load existing data
             df = pd.read_excel(data_file)
-            # Append new data
-            df = df.append(data, ignore_index=True)
+            # Append new data using pd.concat
+            df = pd.concat([df, pd.DataFrame([data])], ignore_index=True)
         else:
             st.write("File does not exist. Creating new file.")
             # Create new DataFrame
@@ -69,6 +69,5 @@ with st.form(key='supplier_form'):
 
 if st.session_state.submitted:
     st.write("### Thank you for your submission!")
- 
 
 
