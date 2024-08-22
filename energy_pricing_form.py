@@ -2,24 +2,10 @@ import streamlit as st
 import pandas as pd
 import os
 
-print("Script started.")  # First point of execution
+# File to save the data in the current working directory
+data_file = 'supplier_data.xlsx'
 
-# Initialize the session state for submission tracking
-if 'submitted' not in st.session_state:
-    st.session_state.submitted = False
-
-print("Session state initialized.")  # Confirm session state initialization
-
-# File to save the data
-data_file = '/Users/jeronimocamou/Downloads/Stanwich_Energy/supplier_data.xlsx'
-
-# Check if the directory exists
-if os.path.exists('/Users/jeronimocamou/Downloads/Stanwich_Energy'):
-    print("Directory exists.")
-else:
-    print("Directory does not exist. Creating directory.")
-    os.makedirs('/Users/jeronimocamou/Downloads/Stanwich_Energy')
-
+# No need to create a new directory; Streamlit Cloud will handle this in the working directory
 def save_data(data):
     print(f"Attempting to save file to: {data_file}")
     try:
@@ -41,8 +27,14 @@ def save_data(data):
     except Exception as e:
         print(f"An error occurred: {e}")
 
+# Rest of your code continues as before...
+
+
 def submit_form():
     print("Form submitted.")  # Confirm form submission
+
+    ####CALCULATIONS GO HERE 
+    
     st.session_state.submitted = True
     data = {
         'Company Name': st.session_state.supplier,
