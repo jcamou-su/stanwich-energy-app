@@ -64,8 +64,4 @@ else:
     st.title("Thank You!")
     st.write("Your submission has been received.")
 
-    # Optionally, provide a way to reset the form if needed
-    if st.button("Submit another response"):
-        st.session_state.submitted = False
-        st.experimental_rerun()
-
+   
