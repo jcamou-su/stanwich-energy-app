@@ -64,22 +64,10 @@ if not st.session_state.submitted and not st.session_state.confirm_submit:
     st.session_state.price8 = st.number_input('Enter Price 8', min_value=0.0, format="%.6f")
 
     # Initial Submit button
-    if st.button("Submit"):
-        st.session_state.confirm_submit = True
+if st.button("Submit"):
+    st.session_state.confirm_submit = True
 
-# Confirmation dialog logic
-if st.session_state.confirm_submit and not st.session_state.submitted:
-    st.write("### Are you sure you want to submit?")
-    col1, col2 = st.columns(2)
 
-    with col1:
-        if st.button("Yes, submit"):
-            submit_form()
-            st.session_state.confirm_submit = False
-
-    with col2:
-        if st.button("No, go back"):
-            st.session_state.confirm_submit = False
 
 # Show thank you message after submission
 if st.session_state.submitted:
