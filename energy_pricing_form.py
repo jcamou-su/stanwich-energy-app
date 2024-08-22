@@ -26,6 +26,8 @@ def save_data(data):
         df.to_excel(data_file, index=False)
     except Exception as e:
         st.error(f"An error occurred while saving the data: {e}")
+        return False
+    return True
 
 # Form submission logic
 def submit_form():
@@ -40,8 +42,10 @@ def submit_form():
         'Price 7': st.session_state.price7,
         'Price 8': st.session_state.price8
     }
-    save_data(data)
-    st.session_state.submitted = True
+    if save_data(data):
+        st.session_state.submitted = True
+    else:
+        st.session_state.confirm_submit = False
 
 # Display form or thank you message based on submission state
 if not st.session_state.submitted and not st.session_state.confirm_submit:
@@ -71,6 +75,7 @@ if st.session_state.confirm_submit and not st.session_state.submitted:
     with col1:
         if st.button("Yes, submit"):
             submit_form()
+            st.session_state.confirm_submit = False
 
     with col2:
         if st.button("No, go back"):
@@ -80,3 +85,4 @@ if st.session_state.confirm_submit and not st.session_state.submitted:
 if st.session_state.submitted:
     st.title("Thank You!")
     st.write("Your submission has been received.")
+
