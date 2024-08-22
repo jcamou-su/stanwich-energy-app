@@ -46,8 +46,8 @@ def submit_form():
     }
     save_data(data)
 
-# Display form
-if not st.session_state.submitted:
+# Define and display the form
+with st.form(key='supplier_form'):
     st.title('Energy Supplier Pricing Form')
     st.write("Please fill in all required fields.")
 
@@ -63,13 +63,12 @@ if not st.session_state.submitted:
     st.session_state.price8 = st.number_input('Enter Price 8', min_value=0.0, format="%.6f")
 
     # Submit button
-    if st.form_submit_button("Submit"):
+    submit_button = st.form_submit_button("Submit")
+    if submit_button:
         submit_form()
 
 if st.session_state.submitted:
     st.write("### Thank you for your submission!")
-
-
  
 
 
