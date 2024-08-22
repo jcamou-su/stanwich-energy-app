@@ -2,9 +2,11 @@ import streamlit as st
 import pandas as pd
 import os
 
-# Initialize session state for submission tracking
+# Initialize session state for submission tracking and confirmation dialog
 if 'submitted' not in st.session_state:
     st.session_state.submitted = False
+if 'confirm_submit' not in st.session_state:
+    st.session_state.confirm_submit = False
 
 # Define the file name for saving data
 data_file = 'supplier_data.xlsx'
@@ -42,7 +44,7 @@ def submit_form():
     st.session_state.submitted = True
 
 # Display form or thank you message based on submission state
-if not st.session_state.submitted:
+if not st.session_state.submitted and not st.session_state.confirm_submit:
     st.title('Energy Supplier Pricing Form')
     st.write("Please fill in all required fields.")
 
@@ -57,11 +59,24 @@ if not st.session_state.submitted:
     st.session_state.price7 = st.number_input('Enter Price 7', min_value=0.0, format="%.6f")
     st.session_state.price8 = st.number_input('Enter Price 8', min_value=0.0, format="%.6f")
 
-    # Submit button
+    # Initial Submit button
     if st.button("Submit"):
-        submit_form()
-else:
+        st.session_state.confirm_submit = True
+
+# Confirmation dialog logic
+if st.session_state.confirm_submit and not st.session_state.submitted:
+    st.write("### Are you sure you want to submit?")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("Yes, submit"):
+            submit_form()
+
+    with col2:
+        if st.button("No, go back"):
+            st.session_state.confirm_submit = False
+
+# Show thank you message after submission
+if st.session_state.submitted:
     st.title("Thank You!")
     st.write("Your submission has been received.")
-
-   
