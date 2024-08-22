@@ -2,9 +2,36 @@ import streamlit as st
 import pandas as pd
 import os
 
-# Initialize the session state for submission tracking
+# Initialize session state variables
 if 'submitted' not in st.session_state:
     st.session_state.submitted = False
+
+if 'supplier' not in st.session_state:
+    st.session_state.supplier = ""
+
+if 'price1' not in st.session_state:
+    st.session_state.price1 = 0.0
+
+if 'price2' not in st.session_state:
+    st.session_state.price2 = 0.0
+
+if 'price3' not in st.session_state:
+    st.session_state.price3 = 0.0
+
+if 'price4' not in st.session_state:
+    st.session_state.price4 = 0.0
+
+if 'price5' not in st.session_state:
+    st.session_state.price5 = 0.0
+
+if 'price6' not in st.session_state:
+    st.session_state.price6 = 0.0
+
+if 'price7' not in st.session_state:
+    st.session_state.price7 = 0.0
+
+if 'price8' not in st.session_state:
+    st.session_state.price8 = 0.0
 
 # Define the file name for saving data
 data_file = 'supplier_data.xlsx'
@@ -41,28 +68,27 @@ def submit_form():
     save_data(data)
     st.session_state.submitted = True
 
-# If the form has not been submitted, display the form
+# Display the form or the thank you message based on the submission state
 if not st.session_state.submitted:
     with st.form(key='supplier_form'):
         st.title('Energy Supplier Pricing Form')
         st.write("Please fill in all required fields.")
 
         # Form fields
-        st.session_state.supplier = st.text_input('Company Name')
-        st.session_state.price1 = st.number_input('Enter Price 1', min_value=0.0, format="%.6f")
-        st.session_state.price2 = st.number_input('Enter Price 2', min_value=0.0, format="%.6f")
-        st.session_state.price3 = st.number_input('Enter Price 3', min_value=0.0, format="%.6f")
-        st.session_state.price4 = st.number_input('Enter Price 4', min_value=0.0, format="%.6f")
-        st.session_state.price5 = st.number_input('Enter Price 5', min_value=0.0, format="%.6f")
-        st.session_state.price6 = st.number_input('Enter Price 6', min_value=0.0, format="%.6f")
-        st.session_state.price7 = st.number_input('Enter Price 7', min_value=0.0, format="%.6f")
-        st.session_state.price8 = st.number_input('Enter Price 8', min_value=0.0, format="%.6f")
+        st.session_state.supplier = st.text_input('Company Name', st.session_state.supplier)
+        st.session_state.price1 = st.number_input('Enter Price 1', min_value=0.0, format="%.6f", value=st.session_state.price1)
+        st.session_state.price2 = st.number_input('Enter Price 2', min_value=0.0, format="%.6f", value=st.session_state.price2)
+        st.session_state.price3 = st.number_input('Enter Price 3', min_value=0.0, format="%.6f", value=st.session_state.price3)
+        st.session_state.price4 = st.number_input('Enter Price 4', min_value=0.0, format="%.6f", value=st.session_state.price4)
+        st.session_state.price5 = st.number_input('Enter Price 5', min_value=0.0, format="%.6f", value=st.session_state.price5)
+        st.session_state.price6 = st.number_input('Enter Price 6', min_value=0.0, format="%.6f", value=st.session_state.price6)
+        st.session_state.price7 = st.number_input('Enter Price 7', min_value=0.0, format="%.6f", value=st.session_state.price7)
+        st.session_state.price8 = st.number_input('Enter Price 8', min_value=0.0, format="%.6f", value=st.session_state.price8)
 
         # Submit button
         submit_button = st.form_submit_button("Submit")
         if submit_button:
             submit_form()
-            st.experimental_rerun()  # Force a rerun of the script to immediately reflect the submission state
 
 # Show thank you message after submission
 if st.session_state.submitted:
