@@ -44,6 +44,7 @@ def submit_form():
     }
     if save_data(data):
         st.session_state.submitted = True
+        st.session_state.confirm_submit = False
 
 # Display form or thank you message based on submission state
 if not st.session_state.submitted:
@@ -74,7 +75,7 @@ if not st.session_state.submitted:
         with col1:
             if st.button("Yes, submit"):
                 submit_form()
-                st.session_state.confirm_submit = False
+                st.experimental_rerun()  # Force immediate rerun to display only the thank you message
 
         with col2:
             if st.button("No, go back"):
