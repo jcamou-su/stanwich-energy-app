@@ -11,7 +11,6 @@ data_file = 'supplier_data.xlsx'
 
 def save_data(data):
     try:
-        # Check if the Excel file exists
         if os.path.exists(data_file):
             # Load existing data
             df = pd.read_excel(data_file)
@@ -26,8 +25,8 @@ def save_data(data):
     except Exception as e:
         st.error(f"An error occurred while saving the data: {e}")
 
+# Form submission logic
 def submit_form():
-    st.session_state.submitted = True
     data = {
         'Company Name': st.session_state.supplier,
         'Price 1': st.session_state.price1,
@@ -40,6 +39,7 @@ def submit_form():
         'Price 8': st.session_state.price8
     }
     save_data(data)
+    st.session_state.submitted = True
 
 # If the form has not been submitted, display the form
 if not st.session_state.submitted:
@@ -62,6 +62,7 @@ if not st.session_state.submitted:
         submit_button = st.form_submit_button("Submit")
         if submit_button:
             submit_form()
+            st.experimental_rerun()  # Force a rerun of the script to immediately reflect the submission state
 
 # Show thank you message after submission
 if st.session_state.submitted:
