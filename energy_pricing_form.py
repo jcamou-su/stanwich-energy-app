@@ -2,39 +2,36 @@ import streamlit as st
 import pandas as pd
 import os
 
+# Ensure that the session state variable 'submitted' is initialized
+if 'submitted' not in st.session_state:
+    st.session_state.submitted = False
+
 # File to save the data in the current working directory
 data_file = 'supplier_data.xlsx'
 
-# No need to create a new directory; Streamlit Cloud will handle this in the working directory
 def save_data(data):
-    print(f"Attempting to save file to: {data_file}")
     try:
         # Check if the Excel file exists
         if os.path.exists(data_file):
-            print("File exists. Appending data.")
+            st.write("File exists. Appending data.")
             # Load existing data
             df = pd.read_excel(data_file)
             # Append new data
             df = df.append(data, ignore_index=True)
         else:
-            print("File does not exist. Creating new file.")
+            st.write("File does not exist. Creating new file.")
             # Create new DataFrame
             df = pd.DataFrame([data])
         
         # Save the data to Excel
         df.to_excel(data_file, index=False)
-        print(f"Data successfully saved to {data_file}")
+        st.write(f"Data successfully saved to {data_file}")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        st.error(f"An error occurred: {e}")
+        raise
 
-# Rest of your code continues as before...
-
-
+# Form handling code
 def submit_form():
-    print("Form submitted.")  # Confirm form submission
-
-    ####CALCULATIONS GO HERE 
-    
     st.session_state.submitted = True
     data = {
         'Company Name': st.session_state.supplier,
@@ -49,9 +46,8 @@ def submit_form():
     }
     save_data(data)
 
-# Display form if not submitted
+# Display form
 if not st.session_state.submitted:
-    print("Displaying form.")  # Confirm form display
     st.title('Energy Supplier Pricing Form')
     st.write("Please fill in all required fields.")
 
@@ -67,11 +63,12 @@ if not st.session_state.submitted:
     st.session_state.price8 = st.number_input('Enter Price 8', min_value=0.0, format="%.6f")
 
     # Submit button
-    submitted = st.button("Submit", on_click=submit_form)
+    if st.form_submit_button("Submit"):
+        submit_form()
 
-# Show thank you message if submitted
 if st.session_state.submitted:
     st.write("### Thank you for your submission!")
+
 
  
 
