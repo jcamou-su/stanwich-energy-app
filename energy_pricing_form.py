@@ -9,7 +9,7 @@ if 'confirm_submit' not in st.session_state:
     st.session_state.confirm_submit = False
 
 # Define the CSV file name with an absolute path
-csv_file = '/absolute/path/to/your/directory/supplier_data.csv'
+csv_file = '/Users/jeronimocamou/Downloads/Stanwich_Energy/supplier_data.csv'
 
 # Function to save data to a CSV file directly
 def save_data_to_csv(data):
