@@ -1,6 +1,7 @@
 import streamlit as st
-import csv
+import pandas as pd
 import os
+import io
 
 # Initialize session state for submission tracking and confirmation dialog
 if 'submitted' not in st.session_state:
@@ -8,41 +9,49 @@ if 'submitted' not in st.session_state:
 if 'confirm_submit' not in st.session_state:
     st.session_state.confirm_submit = False
 
-# Define the CSV file name
-csv_file = 'supplier_data.csv'
+# Define the Excel file name
+excel_file = 'supplier_data.xlsx'
 
-# Function to save data to a CSV file
-def save_data_to_csv(data):
+# Function to save data to an Excel file using an in-memory buffer
+def save_data_to_excel(data):
     try:
-        # Check if the CSV file exists
-        file_exists = os.path.isfile(csv_file)
+        if os.path.exists(excel_file):
+            # Load existing data
+            existing_df = pd.read_excel(excel_file)
+            # Append new data
+            df = pd.concat([existing_df, pd.DataFrame([data])], ignore_index=True)
+        else:
+            # Create new DataFrame
+            df = pd.DataFrame([data])
         
-        with open(csv_file, mode='a', newline='') as file:
-            writer = csv.writer(file)
-            # If the file doesn't exist, write the header
-            if not file_exists:
-                writer.writerow(['Company Name', 'Price 1', 'Price 2', 'Price 3', 'Price 4', 'Price 5', 'Price 6', 'Price 7', 'Price 8'])
-            # Write the data
-            writer.writerow(data)
+        # Save the data to an Excel file using a BytesIO buffer
+        buffer = io.BytesIO()
+        with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+            df.to_excel(writer, sheet_name='Sheet1', index=False)
+            writer.save()
+            buffer.seek(0)
+            with open(excel_file, 'wb') as f:
+                f.write(buffer.read())
+        
         return True
     except Exception as e:
-        st.error(f"An error occurred while saving the data to the CSV file: {e}")
+        st.error(f"An error occurred while saving the data to the Excel file: {e}")
         return False
 
 # Form submission logic
 def submit_form():
-    data = [
-        st.session_state.supplier,
-        st.session_state.price1,
-        st.session_state.price2,
-        st.session_state.price3,
-        st.session_state.price4,
-        st.session_state.price5,
-        st.session_state.price6,
-        st.session_state.price7,
-        st.session_state.price8
-    ]
-    if save_data_to_csv(data):
+    data = {
+        'Company Name': st.session_state.supplier,
+        'Price 1': st.session_state.price1,
+        'Price 2': st.session_state.price2,
+        'Price 3': st.session_state.price3,
+        'Price 4': st.session_state.price4,
+        'Price 5': st.session_state.price5,
+        'Price 6': st.session_state.price6,
+        'Price 7': st.session_state.price7,
+        'Price 8': st.session_state.price8
+    }
+    if save_data_to_excel(data):
         st.session_state.submitted = True
         st.session_state.confirm_submit = False
 
