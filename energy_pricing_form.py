@@ -8,8 +8,8 @@ if 'submitted' not in st.session_state:
 if 'confirm_submit' not in st.session_state:
     st.session_state.confirm_submit = False
 
-# Define the CSV file name
-csv_file = 'supplier_data.csv'
+# Define the CSV file name with an absolute path
+csv_file = '/absolute/path/to/your/directory/supplier_data.csv'
 
 # Function to save data to a CSV file directly
 def save_data_to_csv(data):
