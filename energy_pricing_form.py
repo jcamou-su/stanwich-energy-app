@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import os
-import io
 
 # Initialize session state for submission tracking and confirmation dialog
 if 'submitted' not in st.session_state:
@@ -12,27 +11,20 @@ if 'confirm_submit' not in st.session_state:
 # Define the Excel file name
 excel_file = 'supplier_data.xlsx'
 
-# Function to save data to an Excel file using an in-memory buffer
+# Function to save data to an Excel file directly
 def save_data_to_excel(data):
     try:
         if os.path.exists(excel_file):
             # Load existing data
-            existing_df = pd.read_excel(excel_file)
+            existing_df = pd.read_excel(excel_file, engine='openpyxl')
             # Append new data
             df = pd.concat([existing_df, pd.DataFrame([data])], ignore_index=True)
         else:
             # Create new DataFrame
             df = pd.DataFrame([data])
         
-        # Save the data to an Excel file using a BytesIO buffer
-        buffer = io.BytesIO()
-        with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
-            df.to_excel(writer, sheet_name='Sheet1', index=False)
-            # No need to call writer.save(); the context manager handles it
-
-        # Write the buffer to the actual file
-        with open(excel_file, 'wb') as f:
-            f.write(buffer.getvalue())
+        # Write the DataFrame directly to the Excel file
+        df.to_excel(excel_file, sheet_name='Sheet1', index=False, engine='openpyxl')
         
         return True
     except Exception as e:
