@@ -1,6 +1,15 @@
 import streamlit as st
+from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 import os
+
+conn = st.expiremtal_connection('gsheets', type = GSheetsConnection)
+
+existing_data = conn.read(worksheet= "Stanwich", usecoles=list(range(9)), ttl=5)
+existing_data = existing_data.dropna(how='all')
+
+st.dataframe(existing_data)
+
 
 # Initialize session state for submission tracking and confirmation dialog
 if 'submitted' not in st.session_state:
