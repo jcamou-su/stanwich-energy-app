@@ -14,11 +14,12 @@ creds = service_account.Credentials.from_service_account_info(
 client = gspread.authorize(creds)
 sheet = client.open("Stanwich").sheet1
 
-# Read data from the sheet
+# You can keep this if you want to read the data, but remove the display part
 data = sheet.get_all_records()
 df = pd.DataFrame(data)
 
-st.dataframe(df)
+# Add a title to the app
+st.title("Stanwich Energy")
 
 # Form for adding new supplier data
 with st.form(key="supplier_form"):
@@ -39,3 +40,4 @@ if submit_button:
     new_data = [supplier_name, price1, price2, price3, price4, price5, price6, price7, price8, notes]
     sheet.append_row(new_data)
     st.success("Thank you! Your submission has been received.")
+
