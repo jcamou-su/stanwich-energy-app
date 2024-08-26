@@ -1,15 +1,18 @@
 import streamlit as st
+from google.oauth2 import service_account
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 
-# Google Sheets API setup
-scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("/Users/jeronimocamou/Downloads/Stanwich_Energy/stanwich-0ca1d1161332.json", scope)
-client = gspread.authorize(creds)
+# Specify the required scope
+scope = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
 
-# Open the Google Sheet by name
-sheet = client.open("Stanwich").sheet1  # Assuming 'Stanwich' is the name of your sheet
+# Use secrets to authenticate
+creds = service_account.Credentials.from_service_account_info(
+    st.secrets["google_api"], scopes=scope
+)
+
+client = gspread.authorize(creds)
+sheet = client.open("Stanwich").sheet1
 
 # Read data from the sheet
 data = sheet.get_all_records()
@@ -35,3 +38,4 @@ if submit_button:
     new_data = [supplier_name, price1, price2, price3, price4, price5, price6, price7, price8]
     sheet.append_row(new_data)
     st.success("Thank you! Your submission has been received.")
+
