@@ -8,8 +8,21 @@ if 'submitted' not in st.session_state:
 if 'confirm_submit' not in st.session_state:
     st.session_state.confirm_submit = False
 
-# Define the CSV file name with an absolute path
-csv_file = '/Users/jeronimocamou/Downloads/Stanwich_Energy/supplier_data.csv'
+# Define the directory and file name
+directory = '/Users/jeronimocamou/Downloads/Stanwich_Energy'
+csv_file = os.path.join(directory, 'supplier_data.csv')
+
+# Confirm that the directory exists and has write permissions
+if os.path.exists(directory):
+    st.write(f"Directory exists: {directory}")
+else:
+    st.error(f"Directory does not exist: {directory}")
+
+# Test writing a simple file to ensure the path is correct
+test_file_path = os.path.join(directory, 'test_file.txt')
+with open(test_file_path, 'w') as f:
+    f.write("This is a test file.")
+st.write(f"Test file created at: {test_file_path}")
 
 # Function to save data to a CSV file directly
 def save_data_to_csv(data):
