@@ -28,7 +28,7 @@ def save_data_to_excel(data):
         buffer = io.BytesIO()
         with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
             df.to_excel(writer, sheet_name='Sheet1', index=False)
-            writer.save()
+            # No need to call writer.save(); the context manager handles it
 
         # Write the buffer to the actual file
         with open(excel_file, 'wb') as f:
@@ -94,4 +94,3 @@ if not st.session_state.submitted:
 if st.session_state.submitted:
     st.title("Thank You!")
     st.write("Your submission has been received.")
-
