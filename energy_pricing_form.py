@@ -44,6 +44,7 @@ def submit_form():
         'Price 7': st.session_state.price7,
         'Price 8': st.session_state.price8
     }
+    st.write("Data to be saved:", data)  # Debugging line
     if save_data_to_excel(data):
         st.session_state.submitted = True
         st.session_state.confirm_submit = False
