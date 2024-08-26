@@ -1,49 +1,51 @@
 import streamlit as st
-import pandas as pd
-import os
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
-# Initialize the session state for submission tracking
+# Initialize session state for submission tracking and confirmation dialog
 if 'submitted' not in st.session_state:
     st.session_state.submitted = False
+if 'confirm_submit' not in st.session_state:
+    st.session_state.confirm_submit = False
 
-# Define the file name for saving data
-data_file = 'supplier_data.xlsx'
+# Google Sheets authentication
+scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
+         "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
+creds = ServiceAccountCredentials.from_json_keyfile_name("creds.json", scope)
+client = gspread.authorize(creds)
 
-def save_data(data):
+# Open the Google Sheet
+sheet = client.open("Your Google Sheet Name").sheet1  # Replace with your sheet name
+
+# Function to save data to Google Sheets
+def save_data_to_gsheet(data):
     try:
-        if os.path.exists(data_file):
-            # Load existing data
-            df = pd.read_excel(data_file)
-            # Append new data using pd.concat
-            df = pd.concat([df, pd.DataFrame([data])], ignore_index=True)
-        else:
-            # Create new DataFrame
-            df = pd.DataFrame([data])
-        
-        # Save the data to Excel
-        df.to_excel(data_file, index=False)
+        sheet.append_row(data)
+        return True
     except Exception as e:
-        st.error(f"An error occurred while saving the data: {e}")
+        st.error(f"An error occurred while saving the data to Google Sheets: {e}")
+        return False
 
 # Form submission logic
 def submit_form():
-    data = {
-        'Company Name': st.session_state.supplier,
-        'Price 1': st.session_state.price1,
-        'Price 2': st.session_state.price2,
-        'Price 3': st.session_state.price3,
-        'Price 4': st.session_state.price4,
-        'Price 5': st.session_state.price5,
-        'Price 6': st.session_state.price6,
-        'Price 7': st.session_state.price7,
-        'Price 8': st.session_state.price8
-    }
-    save_data(data)
-    st.session_state.submitted = True
+    data = [
+        st.session_state.supplier,
+        st.session_state.price1,
+        st.session_state.price2,
+        st.session_state.price3,
+        st.session_state.price4,
+        st.session_state.price5,
+        st.session_state.price6,
+        st.session_state.price7,
+        st.session_state.price8
+    ]
+    if save_data_to_gsheet(data):
+        st.session_state.submitted = True
+        st.session_state.confirm_submit = False
 
-# If the form has not been submitted, display the form
+# Display form or thank you message based on submission state
 if not st.session_state.submitted:
-    with st.form(key='supplier_form'):
+    if not st.session_state.confirm_submit:
         st.title('Energy Supplier Pricing Form')
         st.write("Please fill in all required fields.")
 
@@ -58,12 +60,25 @@ if not st.session_state.submitted:
         st.session_state.price7 = st.number_input('Enter Price 7', min_value=0.0, format="%.6f")
         st.session_state.price8 = st.number_input('Enter Price 8', min_value=0.0, format="%.6f")
 
-        # Submit button
-        submit_button = st.form_submit_button("Submit")
-        if submit_button:
-            submit_form()
-            st.experimental_rerun()  # Force a rerun of the script to immediately reflect the submission state
+        # Initial Submit button
+        if st.button("Submit"):
+            st.session_state.confirm_submit = True
+
+    # Confirmation dialog logic
+    if st.session_state.confirm_submit:
+        st.write("### Are you sure you want to submit?")
+        col1, col2 = st.columns(2)
+
+        with col1:
+            if st.button("Yes, submit"):
+                submit_form()
+                st.experimental_rerun()  # Force immediate rerun to display only the thank you message
+
+        with col2:
+            if st.button("No, go back"):
+                st.session_state.confirm_submit = False
 
 # Show thank you message after submission
 if st.session_state.submitted:
-    st.write("### Thank you for your submission!")
+    st.title("Thank You!")
+    st.write("Your submission has been received.")
