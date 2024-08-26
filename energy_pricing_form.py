@@ -75,7 +75,6 @@ if not st.session_state.submitted:
         with col1:
             if st.button("Yes, submit"):
                 submit_form()
-                st.experimental_rerun()  # Force immediate rerun to display only the thank you message
 
         with col2:
             if st.button("No, go back"):
