@@ -13,15 +13,12 @@ csv_file = 'supplier_data.csv'
 
 # Function to save data to a CSV file directly
 def save_data_to_csv(data):
+    st.write("Attempting to save the following data to CSV:", data)  # Debugging line
     try:
         file_exists = os.path.isfile(csv_file)
-        
-        # Create a DataFrame from the data
         df = pd.DataFrame([data])
-        
-        # Write the data to the CSV file
         df.to_csv(csv_file, mode='a', header=not file_exists, index=False)
-        
+        st.write(f"Data successfully saved to {csv_file}")  # Confirm save
         return True
     except Exception as e:
         st.error(f"An error occurred while saving the data to the CSV file: {e}")
@@ -50,6 +47,8 @@ if not st.session_state.submitted:
     if not st.session_state.confirm_submit:
         st.title('Energy Supplier Pricing Form')
         st.write("Please fill in all required fields.")
+        
+        st.write(f"Current working directory: {os.getcwd()}")  # Check directory
 
         # Form fields
         st.session_state.supplier = st.text_input('Company Name')
