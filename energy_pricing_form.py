@@ -8,27 +8,23 @@ if 'submitted' not in st.session_state:
 if 'confirm_submit' not in st.session_state:
     st.session_state.confirm_submit = False
 
-# Define the Excel file name
-excel_file = 'supplier_data.xlsx'
+# Define the CSV file name
+csv_file = 'supplier_data.csv'
 
-# Function to save data to an Excel file directly
-def save_data_to_excel(data):
+# Function to save data to a CSV file directly
+def save_data_to_csv(data):
     try:
-        if os.path.exists(excel_file):
-            # Load existing data
-            existing_df = pd.read_excel(excel_file, engine='openpyxl')
-            # Append new data
-            df = pd.concat([existing_df, pd.DataFrame([data])], ignore_index=True)
-        else:
-            # Create new DataFrame
-            df = pd.DataFrame([data])
+        file_exists = os.path.isfile(csv_file)
         
-        # Write the DataFrame directly to the Excel file
-        df.to_excel(excel_file, sheet_name='Sheet1', index=False, engine='openpyxl')
+        # Create a DataFrame from the data
+        df = pd.DataFrame([data])
+        
+        # Write the data to the CSV file
+        df.to_csv(csv_file, mode='a', header=not file_exists, index=False)
         
         return True
     except Exception as e:
-        st.error(f"An error occurred while saving the data to the Excel file: {e}")
+        st.error(f"An error occurred while saving the data to the CSV file: {e}")
         return False
 
 # Form submission logic
@@ -45,7 +41,7 @@ def submit_form():
         'Price 8': st.session_state.price8
     }
     st.write("Data to be saved:", data)  # Debugging line
-    if save_data_to_excel(data):
+    if save_data_to_csv(data):
         st.session_state.submitted = True
         st.session_state.confirm_submit = False
 
