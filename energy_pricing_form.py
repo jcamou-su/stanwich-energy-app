@@ -5,7 +5,7 @@ import pandas as pd
 
 # Google Sheets API setup
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("path_to_your_credentials.json", scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name("/Users/jeronimocamou/Downloads/Stanwich.stanwich-0ca1d1161332.json", scope)
 client = gspread.authorize(creds)
 
 # Open the Google Sheet by name
