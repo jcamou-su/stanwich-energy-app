@@ -29,9 +29,10 @@ def save_data_to_excel(data):
         with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
             df.to_excel(writer, sheet_name='Sheet1', index=False)
             writer.save()
-            buffer.seek(0)
-            with open(excel_file, 'wb') as f:
-                f.write(buffer.read())
+
+        # Write the buffer to the actual file
+        with open(excel_file, 'wb') as f:
+            f.write(buffer.getvalue())
         
         return True
     except Exception as e:
@@ -93,3 +94,4 @@ if not st.session_state.submitted:
 if st.session_state.submitted:
     st.title("Thank You!")
     st.write("Your submission has been received.")
+
