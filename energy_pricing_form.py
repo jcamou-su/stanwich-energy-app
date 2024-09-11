@@ -24,10 +24,10 @@ st.title("Stanwich Energy")
 # Form for adding new supplier data
 with st.form(key="supplier_form"):
     supplier_name = st.text_input(label="Bet")
-    price1 = st.number_input('Enter Price 1', min_value=0.0, format="%.6f")
-    price2 = st.number_input('Enter Price 2', min_value=0.0, format="%.6f")
-    price3 = st.number_input('Enter Price 3', min_value=0.0, format="%.6f")
-    notes = st.text_input(label="Additional Notes")
+    price1 = st.text_input('Enter Price 1', min_value=0.0, format="%.6f")
+    price2 = st.text_input('Enter Price 2', min_value=0.0, format="%.6f")
+    price3 = st.text_input('Enter Price 3', min_value=0.0, format="%.6f")
+    
     
     submit_button = st.form_submit_button(label="Submit Supplier Details")
 
