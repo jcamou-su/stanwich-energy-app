@@ -27,7 +27,7 @@ with st.form(key="supplier_form"):
     price1 = st.text_input('Enter Price 1', min_value=0.0, format="%.6f")
     price2 = st.text_input('Enter Price 2', min_value=0.0, format="%.6f")
     price3 = st.text_input('Enter Price 3', min_value=0.0, format="%.6f")
-    
+    notes = st.text_input(label="Additional Notes")
     
     submit_button = st.form_submit_button(label="Submit Supplier Details")
 
